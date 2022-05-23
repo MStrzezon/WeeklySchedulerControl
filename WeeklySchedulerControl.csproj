@@ -51,11 +51,20 @@
     <Compile Include="WeeklyScheduler.Designer.cs">
       <DependentUpon>WeeklyScheduler.cs</DependentUpon>
     </Compile>
+    <Compile Include="WeeklySchedulerTMP.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WeeklySchedulerTMP.Designer.cs">
+      <DependentUpon>WeeklySchedulerTMP.cs</DependentUpon>
+    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WeeklyScheduler.resx">
       <DependentUpon>WeeklyScheduler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WeeklySchedulerTMP.resx">
+      <DependentUpon>WeeklySchedulerTMP.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
