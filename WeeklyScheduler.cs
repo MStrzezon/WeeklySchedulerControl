@@ -50,25 +50,20 @@ namespace WeeklyScheduler
 
         private void GenerateTable(int columnCount, int rowCount)
         {
-            //Clear out the existing controls, we are generating a new table layout
             tableLayoutPanel1.Controls.Clear();
 
-            //Clear out the existing row and column styles
             tableLayoutPanel1.ColumnStyles.Clear();
             tableLayoutPanel1.RowStyles.Clear();
 
-            //Now we will generate the table, setting up the row and column counts first
             tableLayoutPanel1.ColumnCount = columnCount;
             tableLayoutPanel1.RowCount = rowCount;
 
             for (int x = 0; x < columnCount; x++)
             {
-                //First add a column
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
                 DateTime dt = new DateTime(2015, 12, 31, 0, 0, 0);
                 for (int y = 0; y < rowCount; y++)
                 {
-                    //Next, add a row.  Only do this when once, when creating the first column
                     if (x == 0)
                     {
                         tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -89,10 +84,6 @@ namespace WeeklyScheduler
                         }
                     }
 
-                    //Create the control, in this case we will add a button
-                    /* Button cmd = new Button();
-                    cmd.Text = string.Format("({0}, {1})", x, y);         //Finally, add the control to the correct location in the table
-                    tableLayoutPanel1.Controls.Add(cmd, x, y);  */
                 }
             }
             tableLayoutPanel1.AutoScroll = true;
@@ -106,18 +97,17 @@ namespace WeeklyScheduler
             {
                 tableLayoutPanel1.GetControlFromPosition(x, 0).Text = startOfWeek.AddDays(x - 1).ToShortDateString() + "\n" + days[x-1];
             }
-/*
             if ((DateTime.Now.Date - startOfWeek.Date).Days >= 0 && (DateTime.Now.Date - startOfWeek.Date).Days <= 6)
             {
-                labels.ElementAt((DateTime.Now.Date - startOfWeek.Date).Days).BackColor = Color.Red;
+                tableLayoutPanel1.GetControlFromPosition((DateTime.Now.Date - startOfWeek.Date).Days, 0).BackColor = Color.Red;
             }
             else
             {
-                foreach (var label in labels)
+                for (int i = 1; i <=7; i++)
                 {
-                    label.BackColor = SystemColors.Control;
-                }
-            }*/
+                    tableLayoutPanel1.GetControlFromPosition(i, 0).BackColor = SystemColors.Control;
+                } 
+            }
             loadEvents();
 
         }
