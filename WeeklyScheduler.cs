@@ -99,7 +99,7 @@ namespace WeeklyScheduler
             }
             if ((DateTime.Now.Date - startOfWeek.Date).Days >= 0 && (DateTime.Now.Date - startOfWeek.Date).Days <= 6)
             {
-                tableLayoutPanel1.GetControlFromPosition((DateTime.Now.Date - startOfWeek.Date).Days, 0).BackColor = Color.Red;
+                tableLayoutPanel1.GetControlFromPosition((DateTime.Now.Date - startOfWeek.Date).Days + 1, 0).BackColor = Color.Red;
             }
             else
             {
@@ -209,10 +209,16 @@ namespace WeeklyScheduler
                     lbl.AutoEllipsis = true;
                     lbl.Padding = new Padding(0);
                     lbl.Margin = new Padding(0);
-                    tableLayoutPanel1.Controls.Add(lbl, x, y);
-                    if ((calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes > 30)
+                    if (tableLayoutPanel1.GetControlFromPosition(x, y) != null)
                     {
-                        tableLayoutPanel1.SetRowSpan(lbl, (int)(calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes / 30);
+                    } else
+                    {
+                        tableLayoutPanel1.Controls.Add(lbl, x, y);
+                        if ((calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes > 30)
+
+                        {
+                            tableLayoutPanel1.SetRowSpan(lbl, (int)(calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes / 30);
+                        }
                     }
                 }
             }
