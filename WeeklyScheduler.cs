@@ -173,16 +173,34 @@ namespace WeeklyScheduler
         {
             DateTime startDate = new DateTime(datePicker.Value.Year, datePicker.Value.Month, datePicker.Value.Day, startTimePicker.Value.Hour, startTimePicker.Value.Minute, 0);
             DateTime endDate = new DateTime(datePicker.Value.Year, datePicker.Value.Month, datePicker.Value.Day, endTimePicker.Value.Hour, endTimePicker.Value.Minute, 0);
+            CalendarEvent newEvent = new CalendarEvent(startDate, endDate, description.Text, colorDialog.Color);
             if (startDate < endDate)
             {
-                CalendarEvents.Add(new CalendarEvent(startDate, endDate, description.Text, colorDialog.Color));
-                colorDialog.Color = SystemColors.Window;
-                loadEvents();
-                description.Clear();
+                if (CalendarEvents.Where(ev => (ev.StartTime < endDate && ev.EndTime > startDate)).FirstOrDefault() == null)
+                {
+                    CalendarEvents.Add(newEvent);
+                    colorDialog.Color = SystemColors.Window;
+                    loadEvents();
+                    description.Clear();
+                } else
+                {
+                    MessageBox.Show("Event overlaps", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
                 MessageBox.Show("Incorrect dates");
+            }
+        }
+
+        private void lblClick(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to delete this event?", "Confirm", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                var lbl = sender as Label;
+                var eventToRemove = CalendarEvents.Where(ev => ev.StartTime == (lbl.Tag as CalendarEvent).StartTime && ev.EndTime == (lbl.Tag as CalendarEvent).EndTime).FirstOrDefault();
+                CalendarEvents.Remove(eventToRemove);
+                tableLayoutPanel1.Controls.Remove(lbl);
             }
         }
 
@@ -200,7 +218,8 @@ namespace WeeklyScheduler
                 Label lbl = new Label();
                 lbl.Text = calendarEvent.Text;
                 lbl.BackColor = calendarEvent.Color;
-                int x = (calendarEvent.StartTime - currentStartOfWeek).Days + 1;
+                lbl.DoubleClick += new EventHandler(lblClick);
+                int x = (calendarEvent.StartTime.Date - currentStartOfWeek.Date).Days + 1;
                 int y = (int)((new TimeSpan(calendarEvent.StartTime.Hour, calendarEvent.StartTime.Minute, calendarEvent.StartTime.Second)).TotalMinutes / 30) + 1;
                 if (x >= 1 && x <= 7)
                 {
@@ -209,16 +228,11 @@ namespace WeeklyScheduler
                     lbl.AutoEllipsis = true;
                     lbl.Padding = new Padding(0);
                     lbl.Margin = new Padding(0);
-                    if (tableLayoutPanel1.GetControlFromPosition(x, y) != null)
+                    lbl.Tag = calendarEvent;
+                    tableLayoutPanel1.Controls.Add(lbl, x, y);
+                    if ((calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes > 30)
                     {
-                    } else
-                    {
-                        tableLayoutPanel1.Controls.Add(lbl, x, y);
-                        if ((calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes > 30)
-
-                        {
-                            tableLayoutPanel1.SetRowSpan(lbl, (int)(calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes / 30);
-                        }
+                        tableLayoutPanel1.SetRowSpan(lbl, (int)(calendarEvent.EndTime - calendarEvent.StartTime).TotalMinutes / 30);
                     }
                 }
             }
